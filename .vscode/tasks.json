@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "test-task",
+      "label": "build-task",
       "type": "shell",
       "linux": {
         "command": [
@@ -10,7 +10,6 @@
           "python3 tools/build.py;",
           "java -jar openapi-generator-cli.jar generate -c test/python/openapi-generator-config.yaml -g python;",
           "python3 -m pip install ./python_generated;",
-          "python -m pytest test/python;"
         ]
       },
       "windows": {
@@ -20,6 +19,19 @@
           "scoop reset temurin11-jdk;",
           "java -jar openapi-generator-cli.jar generate -c test/python/openapi-generator-config.yaml -g python;",
           "python -m pip install ./python_generated;",
+        ]
+      }
+    },
+    {
+      "label": "test-task",
+      "type": "shell",
+      "linux": {
+        "command": [
+          "python -m pytest test/python;"
+        ]
+      },
+      "windows": {
+        "command": [
           "python -m pytest test/python;"
         ]
       }

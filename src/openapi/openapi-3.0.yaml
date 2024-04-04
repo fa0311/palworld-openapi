@@ -7,27 +7,637 @@ info:
   contact:
     email: yuki@yuki0311.com
   license:
-    name: custom license or AGPL-3.0-or-later
+    name: MIT
     url: https://github.com/fa0311/palworld-openapi#license
   version: 0.0.1
 servers:
   - url: http://localhost:8212
 
 paths:
-  /:
+  /v1/api/info:
     get:
-      summary: Root
-      description: Root
+      summary: Get server information
+      operationId: getInfo
+      tags:
+        - info
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Hello, PalWorld!
+                $ref: "#/components/schemas/InfoResponse"
+
+  /v1/api/players:
+    get:
+      summary: Get all players
+      operationId: getPlayers
+      tags:
+        - info
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayersResponse"
+
+  /v1/api/settings:
+    get:
+      summary: Get the server settings
+      operationId: getSettings
+      tags:
+        - info
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SettingsResponse"
+
+  /v1/api/metrics:
+    get:
+      summary: Get the server metrics
+      operationId: getMetrics
+      tags:
+        - info
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetricsResponse"
+
+  /v1/api/announce:
+    post:
+      summary: Announce message to all players
+      operationId: postAnnounce
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnnounceRequest"
+      responses:
+        "200":
+          description: OK
+
+  /v1/api/kick:
+    post:
+      summary: Kick player
+      operationId: postKick
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KickRequest"
+      responses:
+        "200":
+          description: OK
+
+  /v1/api/ban:
+    post:
+      summary: Ban player
+      operationId: postBan
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BanRequest"
+      responses:
+        "200":
+          description: OK
+
+  /v1/api/unban:
+    post:
+      summary: Unban player
+      operationId: postUnban
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnbanRequest"
+      responses:
+        "200":
+          description: OK
+
+  /v1/api/save:
+    post:
+      summary: Save the world
+      operationId: postSave
+      tags:
+        - action
+      responses:
+        "200":
+          description: OK
+
+  /v1/api/shutdown:
+    post:
+      summary: Shutdown the server
+      operationId: postShutdown
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShutdownRequest"
+      responses:
+        "200":
+          description: OK
+
+  /v1/api/stop:
+    post:
+      summary: Force stop the server
+      operationId: postStop
+      tags:
+        - action
+      responses:
+        "200":
+          description: OK
+
 components:
-  schemas: {}
+  schemas:
+    InfoResponse:
+      type: object
+      required:
+        - version
+        - servername
+        - description
+      properties:
+        version:
+          type: string
+          example: v0.1.5.0
+        servername:
+          type: string
+          example: Palworld example Server
+        description:
+          type: string
+          example: This is a Palworld server.
+
+    PlayersResponse:
+      type: object
+      required:
+        - players
+      properties:
+        players:
+          type: array
+          items:
+            $ref: "#/components/schemas/Player"
+
+    SettingsResponse:
+      type: object
+      required:
+        - Difficulty
+        - DayTimeSpeedRate
+        - NightTimeSpeedRate
+        - ExpRate
+        - PalCaptureRate
+        - PalSpawnNumRate
+        - PalDamageRateAttack
+        - PalDamageRateDefense
+        - PlayerDamageRateAttack
+        - PlayerDamageRateDefense
+        - PlayerStomachDecreaceRate
+        - PlayerStaminaDecreaceRate
+        - PlayerAutoHPRegeneRate
+        - PlayerAutoHpRegeneRateInSleep
+        - PalStomachDecreaceRate
+        - PalStaminaDecreaceRate
+        - PalAutoHPRegeneRate
+        - PalAutoHpRegeneRateInSleep
+        - BuildObjectDamageRate
+        - BuildObjectDeteriorationDamageRate
+        - CollectionDropRate
+        - CollectionObjectHpRate
+        - CollectionObjectRespawnSpeedRate
+        - EnemyDropItemRate
+        - DeathPenalty
+        - bEnablePlayerToPlayerDamage
+        - bEnableFriendlyFire
+        - bEnableInvaderEnemy
+        - bActiveUNKO
+        - bEnableAimAssistPad
+        - bEnableAimAssistKeyboard
+        - DropItemMaxNum
+        - DropItemMaxNum_UNKO
+        - BaseCampMaxNum
+        - BaseCampWorkerMaxNum
+        - DropItemAliveMaxHours
+        - bAutoResetGuildNoOnlinePlayers
+        - AutoResetGuildTimeNoOnlinePlayers
+        - GuildPlayerMaxNum
+        - PalEggDefaultHatchingTime
+        - WorkSpeedRate
+        - bIsMultiplay
+        - bIsPvP
+        - bCanPickupOtherGuildDeathPenaltyDrop
+        - bEnableNonLoginPenalty
+        - bEnableFastTravel
+        - bIsStartLocationSelectByMap
+        - bExistPlayerAfterLogout
+        - bEnableDefenseOtherGuildPlayer
+        - CoopPlayerMaxNum
+        - ServerPlayerMaxNum
+        - ServerName
+        - ServerDescription
+        - PublicPort
+        - PublicIP
+        - RCONEnabled
+        - RCONPort
+        - Region
+        - bUseAuth
+        - BanListURL
+        - RESTAPIEnabled
+        - RESTAPIPort
+        - bShowPlayerList
+        - AllowConnectPlatform
+        - bIsUseBackupSaveData
+        - LogFormatType
+      properties:
+        Difficulty:
+          type: string
+          example: Easy
+        DayTimeSpeedRate:
+          type: number
+          format: double
+          example: 1.0
+        NightTimeSpeedRate:
+          type: number
+          format: double
+          example: 1.0
+        ExpRate:
+          type: number
+          format: double
+          example: 1.0
+        PalCaptureRate:
+          type: number
+          format: double
+          example: 1.0
+        PalSpawnNumRate:
+          type: number
+          format: double
+          example: 1.0
+        PalDamageRateAttack:
+          type: number
+          format: double
+          example: 1.0
+        PalDamageRateDefense:
+          type: number
+          format: double
+          example: 1.0
+        PlayerDamageRateAttack:
+          type: number
+          format: double
+          example: 1.0
+        PlayerDamageRateDefense:
+          type: number
+          format: double
+          example: 1.0
+        PlayerStomachDecreaceRate:
+          type: number
+          format: double
+          example: 1.0
+        PlayerStaminaDecreaceRate:
+          type: number
+          format: double
+          example: 1.0
+        PlayerAutoHPRegeneRate:
+          type: number
+          format: double
+          example: 1.0
+        PlayerAutoHpRegeneRateInSleep:
+          type: number
+          format: double
+          example: 1.0
+        PalStomachDecreaceRate:
+          type: number
+          format: double
+          example: 1.0
+        PalStaminaDecreaceRate:
+          type: number
+          format: double
+          example: 1.0
+        PalAutoHPRegeneRate:
+          type: number
+          format: double
+          example: 1.0
+        PalAutoHpRegeneRateInSleep:
+          type: number
+          format: double
+          example: 1.0
+        BuildObjectDamageRate:
+          type: number
+          format: double
+          example: 1.0
+        BuildObjectDeteriorationDamageRate:
+          type: number
+          format: double
+          example: 1.0
+        CollectionDropRate:
+          type: number
+          format: double
+          example: 1.0
+        CollectionObjectHpRate:
+          type: number
+          format: double
+          example: 1.0
+        CollectionObjectRespawnSpeedRate:
+          type: number
+          format: double
+          example: 1.0
+        EnemyDropItemRate:
+          type: number
+          format: double
+          example: 1.0
+        DeathPenalty:
+          type: string
+          example: None
+        bEnablePlayerToPlayerDamage:
+          type: boolean
+          example: true
+        bEnableFriendlyFire:
+          type: boolean
+          example: true
+        bEnableInvaderEnemy:
+          type: boolean
+          example: true
+        bActiveUNKO:
+          type: boolean
+          example: true
+        bEnableAimAssistPad:
+          type: boolean
+          example: true
+        bEnableAimAssistKeyboard:
+          type: boolean
+          example: true
+        DropItemMaxNum:
+          type: integer
+          format: int32
+          example: 100
+        DropItemMaxNum_UNKO:
+          type: integer
+          format: int32
+          example: 100
+        BaseCampMaxNum:
+          type: integer
+          format: int32
+          example: 100
+        BaseCampWorkerMaxNum:
+          type: integer
+          format: int32
+          example: 100
+        DropItemAliveMaxHours:
+          type: integer
+          format: int32
+          example: 100
+        bAutoResetGuildNoOnlinePlayers:
+          type: boolean
+          example: true
+        AutoResetGuildTimeNoOnlinePlayers:
+          type: integer
+          format: int32
+          example: 100
+        GuildPlayerMaxNum:
+          type: integer
+          format: int32
+          example: 100
+        PalEggDefaultHatchingTime:
+          type: integer
+          format: int32
+          example: 100
+        WorkSpeedRate:
+          type: number
+          format: double
+          example: 1.0
+        bIsMultiplay:
+          type: boolean
+          example: true
+        bIsPvP:
+          type: boolean
+          example: true
+        bCanPickupOtherGuildDeathPenaltyDrop:
+          type: boolean
+          example: true
+        bEnableNonLoginPenalty:
+          type: boolean
+          example: true
+        bEnableFastTravel:
+          type: boolean
+          example: true
+        bIsStartLocationSelectByMap:
+          type: boolean
+          example: true
+        bExistPlayerAfterLogout:
+          type: boolean
+          example: true
+        bEnableDefenseOtherGuildPlayer:
+          type: boolean
+          example: true
+        CoopPlayerMaxNum:
+          type: integer
+          format: int32
+          example: 100
+        ServerPlayerMaxNum:
+          type: integer
+          format: int32
+          example: 100
+        ServerName:
+          type: string
+          example: Palworld example Server
+        ServerDescription:
+          type: string
+          example: This is a Palworld server.
+        PublicPort:
+          type: integer
+          format: int32
+          example: 8212
+        PublicIP:
+          type: string
+          example:
+        RCONEnabled:
+          type: boolean
+          example: true
+        RCONPort:
+          type: integer
+          format: int32
+          example: 8213
+        Region:
+          type: string
+          example: Asia
+        bUseAuth:
+          type: boolean
+          example: true
+        BanListURL:
+          type: string
+          example:
+        RESTAPIEnabled:
+          type: boolean
+          example: true
+        RESTAPIPort:
+          type: integer
+          format: int32
+          example: 8214
+        bShowPlayerList:
+          type: boolean
+          example: true
+        AllowConnectPlatform:
+          type: string
+          example: Steam
+        bIsUseBackupSaveData:
+          type: boolean
+          example: true
+        LogFormatType:
+          type: string
+          example: JSON
+
+    MetricsResponse:
+      type: object
+      required:
+        - serverfps
+        - currentplayernum
+        - serverframetime
+        - maxplayernum
+        - uptime
+      properties:
+        serverfps:
+          type: integer
+          format: int32
+          example: 57
+        currentplayernum:
+          type: integer
+          format: int32
+          example: 10
+        serverframetime:
+          type: number
+          format: double
+          example: 16.7671
+        maxplayernum:
+          type: integer
+          format: int32
+          example: 32
+        uptime:
+          type: integer
+          format: int32
+          example: 3600
+
+    AnnounceRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: Hello, PalWorld!
+
+    KickRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+          example: 123456789
+        message:
+          type: string
+          example: You are kicked!
+
+    BanRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+          example: 123456789
+        message:
+          type: string
+          example: You are banned!
+
+    UnbanRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+          example: 123456789
+
+    ShutdownRequest:
+      type: object
+      required:
+        - waittime
+      properties:
+        waittime:
+          type: integer
+          format: int32
+          example: 10
+        message:
+          type: string
+          example: Server is shutting down!
+
+    Player:
+      type: object
+      required:
+        - name
+        - playerId
+        - userId
+        - ip
+        - ping
+        - location_x
+        - location_y
+        - level
+      properties:
+        name:
+          type: string
+          example: PalUser
+        playerId:
+          type: string
+          example: 123456789
+        userId:
+          type: string
+          example: steam_00000000000000000
+        ip:
+          type: string
+          example: 127.0.0.1
+        ping:
+          type: number
+          format: double
+          example: 3.14
+        location_x:
+          type: number
+          format: double
+          example: 123.45
+        location_y:
+          type: number
+          format: double
+          example: 67.89
+        level:
+          type: integer
+          format: int32
+          example: 1
+
+  # -- Security Definitions --
+
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+security:
+  - BasicAuth: []
+
+tags:
+  - name: info
+    description: Server information
+  - name: action
+    description: action operations
