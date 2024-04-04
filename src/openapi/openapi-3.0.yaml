@@ -1,0 +1,33 @@
+openapi: 3.0.3
+info:
+  title: PalWorld OpenAPI
+  description: |-
+    PalWorld OpenAPI(Swagger) specification
+  termsOfService: https://github.com/fa0311
+  contact:
+    email: yuki@yuki0311.com
+  license:
+    name: custom license or AGPL-3.0-or-later
+    url: https://github.com/fa0311/palworld-openapi#license
+  version: 0.0.1
+servers:
+  - url: http://localhost:8212
+
+paths:
+  /:
+    get:
+      summary: Root
+      description: Root
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hello, PalWorld!
+components:
+  schemas: {}

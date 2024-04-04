@@ -1,0 +1,6 @@
+.venv
+__pycache__/
+cookie.json
+*_generated
+*.jar
+cache/
